@@ -1,0 +1,108 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id           String        @id @default(uuid())
+  email        String        @unique
+  nickname     String        @unique
+  password     String
+  admin        Boolean
+  created_at   DateTime      @default(now())
+  updated_at   DateTime      @updatedAt
+  Collections  Collection[]
+  Reviews      Review[]
+  ReviewPhotos ReviewPhoto[]
+  Spots        Spot[]
+  SpotPhotos   SpotPhoto[]
+  Profile      UserProfile?
+}
+
+model UserProfile {
+  id         String   @id @default(uuid())
+  first_name String
+  last_name  String
+  birth_date String?
+  address    String?
+  city       String?
+  zip_code   String?
+  country    String?
+  created_at DateTime @default(now())
+  updated_at DateTime @updatedAt
+  userId     String   @unique
+  User       User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model Label {
+  id    String @id @default(uuid())
+  name  String
+  Spots Spot[] @relation("LabelToSpot")
+}
+
+model ReviewPhoto {
+  id               String   @id @default(uuid())
+  filename         String
+  originalFilename String
+  created_at       DateTime @default(now())
+  userId           String?
+  reviewId         String
+  Review           Review   @relation(fields: [reviewId], references: [id], onDelete: Cascade)
+  UploadedBy       User?    @relation(fields: [userId], references: [id], onDelete: SetNull)
+}
+
+model SpotPhoto {
+  id               String   @id @default(uuid())
+  filename         String
+  originalFilename String
+  created_at       DateTime @default(now())
+  userId           String?
+  spotId           String
+  Spot             Spot?    @relation(fields: [spotId], references: [id], onDelete: Cascade)
+  UploadedBy       User?    @relation(fields: [userId], references: [id], onDelete: SetNull)
+}
+
+model Review {
+  id         String        @id @default(uuid())
+  userId     String?
+  spotId     String
+  created_at DateTime      @default(now())
+  updated_at DateTime      @updatedAt
+  mark       Int
+  comment    String?
+  Spot       Spot          @relation(fields: [spotId], references: [id], onDelete: Cascade)
+  CreatedBy  User?         @relation(fields: [userId], references: [id], onDelete: SetNull)
+  Photos     ReviewPhoto[]
+}
+
+model Collection {
+  id          String   @id @default(uuid())
+  name        String
+  description String
+  userId      String
+  created_at  DateTime @default(now())
+  updated_at  DateTime @updatedAt
+  CreatedBy   User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  Spots       Spot[]   @relation("CollectionToSpot")
+}
+
+model Spot {
+  id          String       @id @default(uuid())
+  longitude   String
+  latitude    String
+  name        String
+  description String
+  userId      String
+  created_at  DateTime     @default(now())
+  updated_at  DateTime     @updatedAt
+  inReview    Boolean
+  Reviews     Review[]
+  CreatedBy   User         @relation(fields: [userId], references: [id])
+  Photos      SpotPhoto[]
+  Labels      Label[]      @relation("LabelToSpot")
+  Collections Collection[] @relation("CollectionToSpot")
+}
