@@ -45,25 +45,27 @@ model Label {
 }
 
 model ReviewPhoto {
-  id               String   @id @default(uuid())
-  filename         String
-  originalFilename String
-  created_at       DateTime @default(now())
-  userId           String?
-  reviewId         String
-  Review           Review   @relation(fields: [reviewId], references: [id], onDelete: Cascade)
-  UploadedBy       User?    @relation(fields: [userId], references: [id], onDelete: SetNull)
+  id           String   @id @default(uuid())
+  url          String
+  thumbnailUrl String
+  photoIdCDN   String
+  created_at   DateTime @default(now())
+  userId       String?
+  reviewId     String
+  Review       Review   @relation(fields: [reviewId], references: [id], onDelete: Cascade)
+  UploadedBy   User?    @relation(fields: [userId], references: [id], onDelete: SetNull)
 }
 
 model SpotPhoto {
-  id               String   @id @default(uuid())
-  filename         String
-  originalFilename String
-  created_at       DateTime @default(now())
-  userId           String?
-  spotId           String
-  Spot             Spot?    @relation(fields: [spotId], references: [id], onDelete: Cascade)
-  UploadedBy       User?    @relation(fields: [userId], references: [id], onDelete: SetNull)
+  id           String   @id @default(uuid())
+  url          String
+  thumbnailUrl String
+  photoIdCDN   String
+  created_at   DateTime @default(now())
+  userId       String?
+  spotId       String
+  Spot         Spot?    @relation(fields: [spotId], references: [id], onDelete: Cascade)
+  UploadedBy   User?    @relation(fields: [userId], references: [id], onDelete: SetNull)
 }
 
 model Review {

@@ -1,5 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { rm, rename } from 'fs/promises';
+// import ImageKit from 'imagekit';
 import { join } from 'path';
 import { config } from 'src/config/config.dev';
 import { PrismaService } from 'src/prisma/prisma.service';
@@ -11,10 +12,32 @@ import {
   SaveSpotPhotosDto,
 } from './dto/save-photo.dto';
 import { UpdatePhotoDto } from './dto/update-photo.dto';
+const ImageKit = require('imagekit');
+
+type ImageKitResponse = {
+  fileId: string;
+  name: string;
+  size: number;
+  filePath: string;
+  url: string;
+  fileType: string;
+  height: number;
+  width: number;
+  thumbnailUrl: string;
+};
 
 @Injectable()
 export class PhotosService {
-  constructor(private prismaService: PrismaService) {}
+  imagekit: any;
+
+  constructor(private prismaService: PrismaService) {
+    console.log(ImageKit);
+    this.imagekit = new ImageKit({
+      privateKey: 'private_8pqqKMGq4X0CHqy6kH+vNYgggds=',
+      publicKey: 'public_LWLhuZFfMGMeEJM7+K/z4oV05hw=',
+      urlEndpoint: 'https://ik.imagekit.io/uhx9ok7su/',
+    });
+  }
   // create(createPhotoDto: CreatePhotoDto) {
   //   return 'This action adds a new photo';
   // }
@@ -35,48 +58,50 @@ export class PhotosService {
   //   return `This action removes a #${id} photo`;
   // }
   async saveSpotPhotos(savePhotosDto: SaveSpotPhotosDto) {
-    const photos = await Promise.all(
+    const responses: Array<ImageKitResponse> = await Promise.all(
       savePhotosDto.photos.map((photo) => {
+        return this.imagekit.upload({
+          file: photo.buffer,
+          fileName: photo.originalname,
+        });
+      }),
+    );
+    await Promise.all(
+      responses.map((photo) => {
         return this.prismaService.spotPhoto.create({
           data: {
-            filename: photo.filename,
-            originalFilename: photo.originalname,
+            photoIdCDN: photo.fileId,
+            thumbnailUrl: photo.thumbnailUrl,
+            url: photo.url,
             userId: savePhotosDto.userId,
             spotId: savePhotosDto.spotId,
           },
         });
       }),
     );
-    await Promise.all(
-      photos.map((photo) => {
-        rename(
-          join(config.filesPath, 'temp', photo.filename),
-          join(config.filesPath, 'spots', photo.filename),
-        );
-      }),
-    );
   }
 
   async saveReviewPhotos(savePhotosDto: SaveReviewPhotosDto) {
-    const photos = await Promise.all(
+    const responses: Array<ImageKitResponse> = await Promise.all(
       savePhotosDto.photos.map((photo) => {
-        return this.prismaService.reviewPhoto.create({
-          data: {
-            filename: photo.filename,
-            originalFilename: photo.originalname,
-            userId: savePhotosDto.userId,
-            reviewId: savePhotosDto.reviewId,
-          },
+        return this.imagekit.upload({
+          file: photo.buffer,
+          fileName: photo.originalname,
         });
       }),
     );
 
     await Promise.all(
-      photos.map((photo) => {
-        rename(
-          join(config.filesPath, 'temp', photo.filename),
-          join(config.filesPath, 'reviews', photo.filename),
-        );
+      responses.map((photo) => {
+        return this.prismaService.reviewPhoto.create({
+          data: {
+            photoIdCDN: photo.fileId,
+            thumbnailUrl: photo.thumbnailUrl,
+            url: photo.url,
+            userId: savePhotosDto.userId,
+            reviewId: savePhotosDto.reviewId,
+          },
+        });
       }),
     );
   }
@@ -98,7 +123,7 @@ export class PhotosService {
     });
     await Promise.all(
       photos.map((photo) => {
-        rm(join(config.filesPath, 'spots', photo.filename));
+        this.imagekit.deleteFile(photo.photoIdCDN);
       }),
     );
     console.log(photos);
@@ -121,7 +146,7 @@ export class PhotosService {
     });
     await Promise.all(
       photos.map((photo) => {
-        rm(join(config.filesPath, 'reviews', photo.filename));
+        this.imagekit.deleteFile(photo.photoIdCDN);
       }),
     );
   }

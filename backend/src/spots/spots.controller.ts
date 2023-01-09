@@ -25,7 +25,8 @@ import { imageStorageHelper } from 'src/photos/helpers/image-storage.helper';
 export class SpotsController {
   constructor(private readonly spotsService: SpotsService) {}
 
-  @UseInterceptors(FilesInterceptor('photos', 10, imageStorageHelper))
+  @UseInterceptors(FilesInterceptor('photos'))
+  // @UseInterceptors(FilesInterceptor('photos', 10, imageStorageHelper))
   @Post()
   @UseGuards(JwtAuthGuard)
   @ApiBearerAuth()

@@ -23,7 +23,7 @@ import { ApiBearerAuth } from '@nestjs/swagger';
 export class ReviewsController {
   constructor(private readonly reviewsService: ReviewsService) {}
 
-  @UseInterceptors(FilesInterceptor('photos', 100, imageStorageHelper))
+  @UseInterceptors(FilesInterceptor('photos'))
   @Post('/:spotId')
   @UseGuards(JwtAuthGuard)
   @ApiBearerAuth()

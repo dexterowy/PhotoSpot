@@ -33,8 +33,6 @@ export class SpotsService {
       },
     });
 
-    console.log(spot);
-
     await this.photosService.saveSpotPhotos({
       photos: photos,
       spotId: spot.id,
@@ -52,7 +50,7 @@ export class SpotsService {
         Photos: {
           select: {
             id: true,
-            filename: true,
+            thumbnailUrl: true,
           },
         },
         CreatedBy: {
@@ -138,7 +136,7 @@ export class SpotsService {
         Photos: {
           select: {
             id: true,
-            filename: true,
+            thumbnailUrl: true,
           },
         },
         CreatedBy: {
@@ -179,7 +177,7 @@ export class SpotsService {
         Photos: {
           select: {
             id: true,
-            filename: true,
+            thumbnailUrl: true,
           },
         },
         CreatedBy: {

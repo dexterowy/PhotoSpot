@@ -14,6 +14,7 @@ export class AddressService {
         },
       },
     );
+    console.log(response.data);
     return response.data[0] || null;
   }
   async findAndGetDistance(q1: string, q2: string) {
