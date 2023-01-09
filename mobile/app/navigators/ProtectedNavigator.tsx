@@ -1,7 +1,9 @@
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { Icon, useTheme } from '@rneui/themed';
 import React from 'react';
+import MapNavigator from '../features/map/navigators/MapNavigator';
 import SettingsScreen from '../features/settings/screens/SettingsScreen';
+import SpotsNavigator from '../features/spots/navigators/SpotsNavigator';
 import SpotsScreen from '../features/spots/screens/SpotsScreen';
 
 const Tab = createBottomTabNavigator();
@@ -13,8 +15,9 @@ const ProtectedNavigator = () => {
     <Tab.Navigator>
       <Tab.Screen
         name="Spots"
-        component={SpotsScreen}
+        component={SpotsNavigator}
         options={{
+          headerShown: false,
           tabBarIcon: ({ focused }) => (
             <Icon
               name="location-on"
@@ -25,8 +28,9 @@ const ProtectedNavigator = () => {
       />
       <Tab.Screen
         name="Map"
-        component={SpotsScreen}
+        component={MapNavigator}
         options={{
+          headerShown: false,
           tabBarIcon: ({ focused }) => (
             <Icon name="map" color={focused ? theme.colors.primary : 'gray'} />
           ),

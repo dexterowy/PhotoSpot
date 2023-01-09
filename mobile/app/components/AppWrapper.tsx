@@ -4,6 +4,12 @@ import { useDispatch } from 'react-redux';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { loginSuccess } from '../features/auth/store/authReducer';
 import * as BootSplash from 'react-native-bootsplash';
+import {
+  PERMISSIONS,
+  request,
+  requestLocationAccuracy,
+  RESULTS,
+} from 'react-native-permissions';
 
 type Props = {
   children: React.ReactNode;
@@ -19,6 +25,15 @@ const AppWrapper = ({ children }: Props) => {
     if (access_token) {
       await dispatch(loginSuccess(access_token));
     }
+    const isLocationGranted = await request(
+      PERMISSIONS.IOS.LOCATION_WHEN_IN_USE,
+    );
+    if (isLocationGranted === RESULTS.GRANTED) {
+      await requestLocationAccuracy({
+        purposeKey: 'HighAccuracyLocationDescription',
+      });
+    }
+    console.log('isLocationGranted');
     setIsInitializingApp(false);
     await BootSplash.hide({
       fade: true,
@@ -46,6 +61,7 @@ const styles = StyleSheet.create({
   wrapper: {
     flex: 1,
     backgroundColor: 'white',
+    width: '100%',
   },
 });
 
