@@ -36,6 +36,7 @@ export class SpotsController {
     @Body() createSpotDto: CreateSpotDto,
     @Req() req,
   ) {
+    console.log(photos);
     return await this.spotsService.create(createSpotDto, req.user.id, photos);
   }
 

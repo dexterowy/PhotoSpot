@@ -36,11 +36,23 @@ export class CollectionsService {
         id: collectionId,
       },
       include: {
-        Spots: true,
+        Spots: {
+          include: {
+            Photos: true,
+            Reviews: true,
+          },
+        },
       },
     });
     if (!collection || collection.userId !== userId)
       throw new HttpException('Collection does not exist.', 404);
+
+    collection.Spots = collection.Spots.map((spot) => {
+      const rateSum = spot.Reviews.reduce((acc, cur) => (acc += cur.mark), 0);
+      const averageRate = rateSum ? rateSum / spot.Reviews.length : 0;
+
+      return { ...spot, averageRate };
+    });
     return collection;
   }
 
