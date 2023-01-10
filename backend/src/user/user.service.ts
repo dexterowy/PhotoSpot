@@ -16,15 +16,16 @@ export class UserService {
   }
 
   async findUserById(id: string) {
-    return await this.prismaService.user.findUnique({
+    const user = await this.prismaService.user.findUnique({
       where: {
         id,
       },
-
       include: {
         Profile: true,
       },
     });
+    user.password = undefined;
+    return user;
   }
 
   async createUser(user: CreateUserDto) {
