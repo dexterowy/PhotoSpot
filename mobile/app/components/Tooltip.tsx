@@ -17,6 +17,7 @@ export const ControlledTooltip: React.FC<
     <Tooltip
       visible={open}
       onOpen={() => {
+        console.log('Test');
         setOpen(true);
       }}
       onClose={() => {

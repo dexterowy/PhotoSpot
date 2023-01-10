@@ -2,27 +2,23 @@
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 <dict>
-
-
-  <!-- <key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
-  <string>YOUR TEXT</string> -->
-  <!-- <key>NSLocationAlwaysUsageDescription</key>
-  <string>YOUR TEXT</string> -->
-  <key>NSLocationTemporaryUsageDescriptionDictionary</key>
-  <dict>
-    <key>HighAccuracyLocationDescription</key>
-    <string>Your accurate current location allows to display it on map</string>
-  </dict>
-  <key>NSLocationWhenInUseUsageDescription</key>
-  <string>Your location allows to view spots near you</string>
-  <key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
-  <string>Your location allows to view spots near you</string>
-
-  <key>NSPhotoLibraryUsageDescription</key>
-  <string>Add photo from your library to review or spot</string>
-  <key>NSPhotoLibraryAddUsageDescription</key>
-  <string>Add photo from your library to review or spot</string>
-
+	<key>NSLocationTemporaryUsageDescriptionDictionary</key>
+	<dict>
+		<key>HighAccuracyLocationDescription</key>
+		<string>Your accurate current location allows to display it on map</string>
+	</dict>
+	<key>LSApplicationQueriesSchemes</key>
+	<array>
+	<string>geo</string>
+	</array>
+	<key>NSPhotoLibraryUsageDescription</key>
+	<string>Add photo from your library to review or spot</string>
+	<key>NSLocationWhenInUseUsageDescription</key>
+	<string></string>
+	<key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
+	<string>Your location allows to view spots near you</string>
+	<key>NSPhotoLibraryAddUsageDescription</key>
+	<string>Add photo from your library to review or spot</string>
 	<key>CFBundleDevelopmentRegion</key>
 	<string>en</string>
 	<key>CFBundleDisplayName</key>
@@ -56,8 +52,6 @@
 			</dict>
 		</dict>
 	</dict>
-	<key>NSLocationWhenInUseUsageDescription</key>
-	<string></string>
 	<key>UIAppFonts</key>
 	<array>
 		<string>Foundation.ttf</string>

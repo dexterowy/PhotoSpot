@@ -8,14 +8,23 @@ import RatingStars from './RatingStars';
 
 type Props = {
   spot: SpotsListEntity;
+  onPress?: () => void;
 };
 
 const SpotsListItem = (props: Props) => {
-  const { spot } = props;
+  const { spot, onPress } = props;
   const { navigate } = useNavigation();
+
+  const handleNavigateToDetailsDefault = () =>
+    navigate('Spots/Spot', {
+      screen: 'Spot/SpotDetails',
+      params: {
+        spotId: spot.id,
+      },
+    });
+
   return (
-    <Pressable
-      onPress={() => navigate('Spots/SpotDetails', { spotId: spot.id })}>
+    <Pressable onPress={onPress || handleNavigateToDetailsDefault}>
       <Card>
         <Row>
           <Image

@@ -1,12 +1,14 @@
-import { StyleSheet, View } from 'react-native';
-import MapView, { Marker, Region } from 'react-native-maps';
-import React, { useEffect, useState } from 'react';
+import { Linking, Pressable, StyleSheet, View } from 'react-native';
+import MapView, { Callout, Marker, Region } from 'react-native-maps';
+import React, { useCallback, useEffect, useState } from 'react';
 import Geolocation from '@react-native-community/geolocation';
 import { Text } from '@rneui/base';
 import { useGetSpotsQuery } from '../../spots/api/spotsApi';
 import { Icon, LinearProgress, useTheme } from '@rneui/themed';
 import { ControlledTooltip } from '../../../components/Tooltip';
 import { useNavigation } from '@react-navigation/native';
+import { Spot } from '../../spots/types/Spot';
+import { SpotsListEntity } from '../../spots/types/SpotsListEntity';
 
 const MapScreen = () => {
   const { theme } = useTheme();
@@ -39,6 +41,22 @@ const MapScreen = () => {
   const handleRegionChange = (region: Region) => {
     console.log(region);
   };
+  const handleNavigateToDetails = useCallback(
+    (spot: SpotsListEntity) => {
+      try {
+        console.log('uwu');
+        //@ts-ignore TODO: Add typechecking for navigation
+        navigate('Map/SpotNavigator', {
+          screen: 'Spot/SpotDetails',
+          params: { spotId: spot.id },
+        });
+      } catch (err: any) {
+        console.log(err);
+      }
+      // handleClose();
+    },
+    [navigate],
+  );
 
   if (!currentPos) {
     return <Text>Loading...</Text>;
@@ -66,43 +84,50 @@ const MapScreen = () => {
         {spots?.map(spot => (
           <Marker
             key={spot.id}
+            onPress={() => console.log('uwu')}
+            centerOffset={{ y: -24, x: 0 }}
             coordinate={{
               longitude: parseFloat(spot.longitude),
               latitude: parseFloat(spot.latitude),
             }}>
-            <ControlledTooltip
+            <Icon
+              name={'location-on'}
+              size={48}
+              color={theme.colors.secondary}
+            />
+            <Callout style={{ width: 200 }}>
+              <View>
+                <Text h4>{spot.name}</Text>
+                <Text
+                  onPress={() => {
+                    console.log('wtf');
+                    navigate('Map/SpotNavigator', {
+                      screen: 'Spot/SpotDetails',
+                      params: { spotId: spot.id },
+                    });
+                  }}
+                  h4
+                  style={{
+                    marginTop: 8,
+                    color: theme.colors.primary,
+                    textDecorationLine: 'underline',
+                  }}>
+                  Show details
+                </Text>
+              </View>
+            </Callout>
+            {/* <ControlledTooltip
               containerStyle={{
                 width: 'auto',
                 height: 'auto',
                 backgroundColor: 'white',
               }}
-              toggleOnPress
               pointerColor={'white'}
               customOverlay={handleClose => (
-                <View style={{ flex: 1 }}>
-                  <Text h4>{spot.name}</Text>
-                  <Text
-                    h4
-                    onPress={() => {
-                      //@ts-ignore TODO: Add typechecking for navigation
-                      navigate('Map/SpotDetails', { spotId: spot.id });
-                      handleClose();
-                    }}
-                    style={{
-                      marginTop: 8,
-                      color: theme.colors.primary,
-                      textDecorationLine: 'underline',
-                    }}>
-                    Show details
-                  </Text>
-                </View>
+
               )}>
-              <Icon
-                name={'location-on'}
-                size={48}
-                color={theme.colors.secondary}
-              />
-            </ControlledTooltip>
+
+            </ControlledTooltip> */}
           </Marker>
         ))}
       </MapView>

@@ -12,14 +12,22 @@ import { useNavigation } from '@react-navigation/native';
 type Form = {
   email: string;
   password: string;
+  repeatPassword: string;
+  nickname: string;
+  firstName: string;
+  lastName: string;
 };
 
 const defaultValues: Form = {
   email: '',
   password: '',
+  repeatPassword: '',
+  nickname: '',
+  firstName: '',
+  lastName: '',
 };
 
-const LoginForm = () => {
+const RegisterForm = () => {
   const {
     control,
     handleSubmit,
@@ -38,11 +46,15 @@ const LoginForm = () => {
 
   const onSubmit = async (data: Form) => {
     try {
-      const response = await authApi.login({
+      await authApi.register({
         email: data.email,
         password: data.password,
+        firstName: data.firstName,
+        lastName: data.lastName,
+        nickname: data.nickname,
       });
-      dispatch(loginAction(response.data.access_token));
+      // dispatch(loginAction(response.data.access_token));
+      navigate('Login');
     } catch (err: any) {
       console.log(JSON.stringify(err.response.data, null, 2));
       // console.log(err.response.message);
@@ -51,6 +63,30 @@ const LoginForm = () => {
 
   return (
     <View style={{ width: '100%' }}>
+      <FormTextInput
+        control={control}
+        name={'firstName'}
+        label={'First name'}
+        placeholder={'Enter your first name'}
+        textContentType={'givenName'}
+        autoCorrect={false}
+      />
+      <FormTextInput
+        control={control}
+        name={'lastName'}
+        label={'Last name'}
+        placeholder={'Enter your last name'}
+        textContentType={'familyName'}
+        autoCorrect={false}
+      />
+      <FormTextInput
+        control={control}
+        name={'nickname'}
+        label={'Nickname'}
+        placeholder={'Enter your nickname'}
+        textContentType={'nickname'}
+        autoCorrect={false}
+      />
       <FormTextInput
         control={control}
         name={'email'}
@@ -66,23 +102,20 @@ const LoginForm = () => {
         label={'Password'}
         placeholder={'Enter password'}
       />
+      <FormPasswordInput
+        control={control}
+        name={'repeatPassword'}
+        label={'Repeat password'}
+        placeholder={'Enter password again'}
+      />
       <Button
         loading={isSubmitting}
         style={{ marginHorizontal: 10 }}
         onPress={handleSubmit(onSubmit)}>
-        Login
-      </Button>
-      <Button
-        type={'outline'}
-        style={{ margin: 10 }}
-        onPress={() => navigate('Registration')}>
         Register
-      </Button>
-      <Button type={'clear'} style={{ margin: 10 }}>
-        Forgot password
       </Button>
     </View>
   );
 };
 
-export default LoginForm;
+export default RegisterForm;
