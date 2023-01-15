@@ -21,7 +21,16 @@ const SpotsScreen = () => {
   }
 
   if (!spots || spots.length === 0) {
-    return <Text>No spots found :(</Text>;
+    return (
+      <SafeAreaView style={{ flex: 1 }}>
+        <Text h2 style={{ marginLeft: 16 }}>
+          Spots ({spots?.length})
+        </Text>
+        <Text h4 style={{ textAlign: 'center', marginTop: 64 }}>
+          There is no spots yet.
+        </Text>
+      </SafeAreaView>
+    );
   }
 
   return (

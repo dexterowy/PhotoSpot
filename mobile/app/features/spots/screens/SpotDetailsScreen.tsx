@@ -81,7 +81,7 @@ const SpotDetailsScreen = () => {
         }>
         <View style={{ margin: 16 }}>
           <Text h4>{spotDetails?.name}</Text>
-          <Text style={{ color: 'gray', marginVertical: 8 }}>4.2 km away</Text>
+          <Text style={{ color: 'gray', marginVertical: 8 }}>515 km away</Text>
           <Carousel
             loop
             width={width - 32}

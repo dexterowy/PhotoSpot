@@ -46,7 +46,7 @@ const SpotsListItem = (props: Props) => {
                 style={{ flex: 1 }}>
                 {spot.name}
               </Text>
-              <Text>(4.2 km)</Text>
+              <Text>(515 km)</Text>
             </Row>
             <Row style={{ alignItems: 'center', marginVertical: 4 }}>
               <RatingStars rating={spot.averageRate} />
